@@ -1,0 +1,25 @@
+{
+	"name": "pirobos",
+	"version": "0.1.0",
+	"description": "pi extension that bridges the Ouroboros Agent OS into pi as slash-commands and an LLM-callable tool. Spec-first coding workflow with Karpathy harness.",
+	"type": "module",
+	"main": "index.ts",
+	"keywords": ["pi", "pi-extension", "ouroboros", "pirobos", "karpathy", "spec-first"],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shseooo/pirobos.git"
+	},
+	"bugs": {
+		"url": "https://github.com/shseooo/pirobos/issues"
+	},
+	"homepage": "https://github.com/shseooo/pirobos#readme",
+	"dependencies": {
+		"@mariozechner/pi-ai": "*",
+		"@mariozechner/pi-coding-agent": "*"
+	},
+	"devDependencies": {
+		"@types/node": "^22",
+		"typescript": "^5.6.0"
+	}
+}
