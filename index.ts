@@ -365,7 +365,7 @@ function buildOuroborosPromptBlock(state: State, seed: Seed | null): string {
 			"After each user answer, call `ooo_seed_set` to record what you've learned (add ACs, define ontology terms, list constraints, note exposed assumptions). Update the running ambiguity score (0 = perfectly specified, 1 = total fog).",
 		);
 		out.push(
-			"When ambiguity ≤ 0.2 and at least 5 ACs are recorded, call `ooo_seed_finalize` to lock the seed. Do not write any production code during the interview.",
+			"Even when ambiguity ≤ 0.2 and ≥ 5 ACs are recorded, do NOT call `ooo_seed_finalize` yet if you still have material questions in mind — load-bearing assumptions, untested edge cases, unresolved ontology gaps, or unconfirmed anti-cases. Keep interviewing until you have no more material questions, THEN call `ooo_seed_finalize` to lock the seed. The metric thresholds are necessary but not sufficient. Do not write any production code during the interview.",
 		);
 	}
 
@@ -579,7 +579,7 @@ export default function (pi: ExtensionAPI): void {
 			name: "ooo_seed_finalize",
 			label: "Seed.finalize",
 			description:
-				"Lock the current seed draft into an immutable seed.yaml. Call only when ambiguity ≤ 0.2 and at least 5 ACs are present.",
+				"Lock the current seed draft into an immutable seed.yaml. Call only when (a) ambiguity ≤ 0.2, (b) at least 5 ACs are present, AND (c) you have no more material questions to ask. The metric thresholds gate eligibility, but a lingering material question (load-bearing assumption, edge case, ontology gap, anti-case) means keep interviewing — do not finalize prematurely.",
 			promptSnippet: "ooo_seed_finalize: lock the seed and end the interview.",
 			parameters: Type.Object({
 				ambiguity: Type.Number({ minimum: 0, maximum: 1 }),
@@ -734,7 +734,7 @@ export default function (pi: ExtensionAPI): void {
 			appendInterview(cwd, { kind: "start", at: new Date().toISOString(), goal });
 			ctx.ui.notify(`Interview started: ${goal}`, "info");
 			await pi.sendUserMessage(
-				`Begin the Ouroboros interview for the goal: "${goal}".\n\nAsk ONE Socratic question that exposes the most load-bearing hidden assumption you can identify. After my answer, call \`ooo_seed_set\` to record the learning, then ask the next question. Continue until ambiguity ≤ 0.2 and ≥ 5 acceptance criteria are pinned, then call \`ooo_seed_finalize\`.`,
+				`Begin the Ouroboros interview for the goal: "${goal}".\n\nAsk ONE Socratic question that exposes the most load-bearing hidden assumption you can identify. After my answer, call \`ooo_seed_set\` to record the learning, then ask the next question. Continue until you have no more material questions AND ambiguity ≤ 0.2 AND ≥ 5 acceptance criteria are pinned — only then call \`ooo_seed_finalize\`. The thresholds are necessary but not sufficient: if questions remain in your head, keep asking.`,
 			);
 		},
 	});
